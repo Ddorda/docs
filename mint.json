@@ -1,0 +1,84 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Anchor Browser Docs",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#faa380",
+    "light": "#fa804f",
+    "dark": "#faa380",
+    "anchors": {
+      "from": "#faa380",
+      "to": "#fa804f"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:hi@anchorbrowser.io"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Live Playground",
+    "url": "https://app.anchorbrowser.io/playground"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference",
+      "openapi": "/api_swagger_output.yaml"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Interactive Playground",
+      "icon": "window-restore",
+      "url": "https://app.anchorbrowser.io/"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "why"
+      ]
+    },
+    {
+      "group": "Capabilities",
+      "pages": [
+        "essentials/browser-configuration",
+        "advanced/proxy", 
+        "advanced/captcha-solving",
+        "advanced/ai-task-completion",
+        "essentials/authentication-and-identity",
+        "essentials/tool-building",
+        "advanced/browser-termination"
+      ]
+    },
+    {
+      "group": "Integrate",
+      "pages": [
+        "advanced/browser-live-view",
+        "agent-frameworks/connect-to-agent-frameworks",
+        "agent-frameworks/crewai",
+        "agent-frameworks/langchain",
+        "agent-frameworks/custom-agent-framework"
+      ]
+    },
+    {
+      "group": "Additional Details",
+      "pages": [
+        "pricing"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/anchorbrowser",
+    "github": "https://github.com/anchorforge"
+  }
+}
