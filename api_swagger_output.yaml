@@ -566,10 +566,6 @@ paths:
             schema:
               type: object
               properties:
-                code:
-                  type: string
-                  description: Base64-encoded code to execute when the browser session starts.
-                  example: "Y29uc29sZS5sb2coJ0hlbGxvIFdvcmxkJyk7"
                 session:
                   type: object
                   description: Session-related configurations.
@@ -726,13 +722,21 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    description: Error message indicating the nature of the bad request.
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 400
+                      message:
+                        type: string
+                        example: Invalid request parameters
               examples:
                 captchaSolverRequiresProxy:
                   summary: CAPTCHA solver requires proxy to be active.
                   value:
-                    error: CAPTCHA solver requires proxy to be active.
+                    error:
+                      code: 400
+                      message: CAPTCHA solver requires proxy to be active.
         '402':
           description: Payment Required - Insufficient credits to allocate a new browser
           content:
@@ -741,8 +745,14 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    description: Error message indicating insufficient credits.
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 402
+                      message:
+                        type: string
+                        example: Insufficient credits to allocate a new browser
   /v1/sessions/all:
     delete:
       summary: End All Sessions
@@ -817,8 +827,14 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    example: Invalid API key
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 401
+                      message:
+                        type: string
+                        example: Invalid API key
         '500':
           description: Internal Server Error
           content:
@@ -827,8 +843,14 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    example: Internal server error
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 500
+                      message:
+                        type: string
+                        example: Internal server error
   /v1/sessions/{session_id}:
     delete:
       summary: End Browser Session
@@ -860,8 +882,36 @@ paths:
                         example: "success"
         '401':
           description: Invalid API Key or browser session ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 401
+                      message:
+                        type: string
+                        example: Invalid API key
         '500':
-          description: Internal Server Error.
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 500
+                      message:
+                        type: string
+                        example: Internal server error
   /v1/sessions/{session_id}/recording:
     get:
       summary: List Session Recordings
@@ -904,8 +954,14 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    example: Invalid API key
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 401
+                      message:
+                        type: string
+                        example: Invalid API key
         '404':
           description: Session recordings not found.
           content:
@@ -914,8 +970,14 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    example: Session recordings not found
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 404
+                      message:
+                        type: string
+                        example: Session recordings not found
   /v1/sessions/{session_id}/downloads:
     get:
       summary: List Session Downloads
@@ -997,8 +1059,14 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    example: Invalid API key
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 401
+                      message:
+                        type: string
+                        example: Invalid API key
         '404':
           description: The session or its downloads metadata could not be found.
           content:
@@ -1007,8 +1075,14 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    example: Session downloads not found
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 404
+                      message:
+                        type: string
+                        example: Session downloads not found
   /v1/sessions/{session_id}/recordings/primary/fetch:
     get:
       summary: Get Session Recording
@@ -1033,15 +1107,21 @@ paths:
                 type: string
                 format: binary
         '401':
-          description: Invalid API Key
+          description: Invalid API Key - Authentication failed or API key is missing.
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   error:
-                    type: string
-                    example: Invalid API key
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 401
+                      message:
+                        type: string
+                        example: Invalid API key
         '404':
           description: Recording not found
           content:
@@ -1050,8 +1130,14 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    example: Recording not found
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 404
+                      message:
+                        type: string
+                        example: Recording not found
         '500':
           description: Internal Server Error
           content:
@@ -1060,8 +1146,14 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    example: Internal server error
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 500
+                      message:
+                        type: string
+                        example: Internal server error
   /v1/tools/fetch-webpage:
     post:
       summary: Get Webpage Content
