@@ -95,6 +95,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - name
               properties:
                 name:
                   type: string
@@ -579,34 +581,31 @@ paths:
                           description: Enable or disable video recording of the browser session. Defaults to `false`.
                           example: false
                     proxy:
+                      $ref: '#/components/schemas/ProxyConfig'
+                    timeout:
                       type: object
-                      description: Configuration options for proxy usage.
+                      description: Timeout configurations for the browser session.
                       properties:
-                        active:
+                        max_duration:
+                          type: integer
+                          description: Maximum amount of time (in minutes) for the browser to run before terminating. Defaults to `180`.
+                          example: 10
+                        idle_timeout:
+                          type: integer
+                          description: The amount of time (in minutes) the browser session waits for new connections after all others are closed before stopping. Defaults to `5`.
+                          example: 3
+                    live_view:
+                      type: object
+                      description: Configuration for live viewing the browser session.
+                      properties:
+                        read_only:
                           type: boolean
-                          description: Enable or disable proxy usage. Defaults to `false`.
+                          description: Enable or disable read-only mode for live viewing. Defaults to `false`.
                           example: false
-                        type:
-                          type: string
-                          enum: [anchor_residential, anchor_mobile, custom]
-                          description: Type of proxy to use.
-                          example: anchor_residential
-                        server:
-                          type: string
-                          description: Proxy server address (required for custom proxy).
-                          example: proxy.example.com
-                        username:
-                          type: string
-                          description: Proxy username (required for custom proxy).
-                          example: myUser
-                        password:
-                          type: string
-                          description: Proxy password (required for custom proxy).
-                          example: myPassword
-                        country_code:
-                          type: string
-                          description: Country code for mobile proxy (only used with anchor_mobile).
-                          example: uk
+                browser:
+                  type: object
+                  description: Browser-specific configurations.
+                  properties:
                     profile:
                       type: object
                       description: Options for managing and persisting browser session profiles.
@@ -623,33 +622,6 @@ paths:
                           type: boolean
                           description: Indicates whether the browser session cache should be saved when the browser session ends. Defaults to `false`.
                           example: true
-                    timeout:
-                      type: object
-                      description: Timeout configurations for the browser session.
-                      properties:
-                        max_duration:
-                          type: integer
-                          description: Maximum amount of time (in minutes) for the browser to run before terminating. Defaults to `180`.
-                          example: 10
-                        idle:
-                          type: integer
-                          description: The amount of time (in minutes) the browser session waits for new connections after all others are closed before stopping. Defaults to `5`.
-                          example: 3
-                    live_view:
-                      type: object
-                      description: Configuration for live viewing the browser session.
-                      properties:
-                        permissions:
-                          type: array
-                          description: Permissions for live view. 'viewonly' requires headless browser.
-                          items:
-                            type: string
-                            enum: [viewonly]
-                          example: ["viewonly"]
-                browser:
-                  type: object
-                  description: Browser-specific configurations.
-                  properties:
                     adblock:
                       type: object
                       description: Configuration for ad-blocking.
@@ -658,7 +630,7 @@ paths:
                           type: boolean
                           description: Enable or disable ad-blocking. Defaults to `true`.
                           example: false
-                    popup_blocking:
+                    popup_blocker:
                       type: object
                       description: Configuration for popup blocking.
                       properties:
@@ -666,7 +638,7 @@ paths:
                           type: boolean
                           description: Blocks popups, including ads and CAPTCHA consent banners. Requires adblock to be active. Defaults to `true`.
                           example: false
-                    captcha:
+                    captcha_solver:
                       type: object
                       description: Configuration for captcha-solving.
                       properties:
@@ -915,7 +887,7 @@ paths:
   /v1/sessions/{session_id}/recordings:
     get:
       summary: List Session Recordings
-      description: Retrieves the URLs of the session's video recordings. Requires a valid API key for authentication.
+      description: Retrieves the URLs of the browser session's video recordings. Requires a valid API key for authentication.
       tags:
         - Browser Sessions
       parameters:
@@ -1090,7 +1062,7 @@ paths:
                         type: string
                         example: Invalid API key
         '404':
-          description: The session or its downloads metadata could not be found.
+          description: The browser session or its downloads metadata could not be found.
           content:
             application/json:
               schema:
@@ -1189,7 +1161,7 @@ paths:
           name: sessionId
           schema:
             type: string
-          description: An optional session identifier to reference an existing running session. If provided, the tool will execute within that session.
+          description: An optional browser session identifier to reference an existing running browser session. If provided, the tool will execute within that browser session.
           example: 2b814554-02b2-4b28-bc61-6bc9d29bfe0a
       requestBody:
         required: true
@@ -1265,7 +1237,7 @@ paths:
           schema:
             type: string
             title: Browser Session
-          description: An optional session identifier to reference an existing running sessions. When passed, the tool will be executed on the provided session.
+          description: An optional browser session identifier to reference an existing running browser sessions. When passed, the tool will be executed on the provided browser session.
           example: 2b814554-02b2-4b28-bc61-6bc9d29bfe0a
       requestBody:
         required: true
@@ -1273,6 +1245,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - task
               properties:
                 url:
                   type: string
@@ -1342,7 +1316,7 @@ paths:
           name: sessionId
           schema:
             type: string
-          description: An optional session identifier to reference an existing running sessions. When passed, the tool will be executed on the provided session.
+          description: An optional browser session identifier to reference an existing running browser sessions. When passed, the tool will be executed on the provided browser session.
           example: 2b814554-02b2-4b28-bc61-6bc9d29bfe0a
       requestBody:
         required: true
@@ -1359,22 +1333,18 @@ paths:
                   type: integer
                   description: The width of the browser viewport in pixels.
                   example: 1280
-                  default: 1280
                 height:
                   type: integer
                   description: The height of the browser viewport in pixels.
                   example: 720
-                  default: 720
                 image_quality:
                   type: integer
                   description: Quality of the output image, on the range 1-100. 100 will not perform any compression.
                   example: 70
-                  default: 100
                 wait:
                   type: integer
                   description: Duration in milliseconds to wait after page has loaded, mainly used for sites with JS animations.
                   example: 200
-                  default: 0
                 scroll_all_content:
                   type: boolean
                   description: If true, scrolls the page and captures all visible content.
