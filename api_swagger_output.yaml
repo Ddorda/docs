@@ -912,10 +912,10 @@ paths:
                       message:
                         type: string
                         example: Internal server error
-  /v1/sessions/{session_id}/recording:
+  /v1/sessions/{session_id}/recordings:
     get:
       summary: List Session Recordings
-      description: Retrieves the URLs of the session's video recording. Requires a valid API key for authentication.
+      description: Retrieves the URLs of the session's video recordings. Requires a valid API key for authentication.
       tags:
         - Browser Sessions
       parameters:
@@ -944,8 +944,30 @@ paths:
                       items:
                         type: array
                         items:
-                          type: string
-                        description: An array of video recording URLs.
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: Unique identifier for the recording
+                            is_primary:
+                              type: boolean
+                              description: Indicates if this is the primary recording
+                            file_link:
+                              type: string
+                              description: URL to access the recording file
+                            suggested_file_name:
+                              type: string
+                              description: Suggested filename for the recording
+                            duration:
+                              type: string
+                              description: Duration of the recording
+                            size:
+                              type: number
+                              description: Size of the recording file in bytes
+                            created_at:
+                              type: string
+                              format: date-time
+                              description: Timestamp when the recording was created
         '401':
           description: Invalid API Key.
           content:
