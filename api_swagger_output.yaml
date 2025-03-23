@@ -1246,16 +1246,16 @@ paths:
             schema:
               type: object
               required:
-                - task
+                - prompt
               properties:
                 url:
                   type: string
                   description: The URL of the webpage. If not provided, the tool will use the current page in the session.
                   example: https://anchorbrowser.io
-                task:
+                prompt:
                   type: string
                   description: The task to be autonomously completed.
-                  example: Summarize the main article
+                  example: What is anchor browser?
       responses:
         '200':
           description: The result of the autonomous task.
